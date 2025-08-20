@@ -80,25 +80,3 @@ curl -H "name: testuser" http://localhost/hello
 # Check Traefik dashboard
 open http://localhost:8081
 ```
-
-## Kubernetes Deployment
-
-### Prerequisites
-- Kubernetes cluster (minikube, kind, or cloud provider)
-- kubectl configured
-- Docker registry access (for custom images)
-
-### 1. Fix Configuration Issues
-
-First, update the Kubernetes configurations to resolve naming conflicts:
-
-**k8s/auth-k8s/configmap.yaml**:
-````yaml
-# filepath: k8s/auth-k8s/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: auth-config  # Changed from app-config
-  namespace: auth-app
-data:
-  PORT: "5000"
