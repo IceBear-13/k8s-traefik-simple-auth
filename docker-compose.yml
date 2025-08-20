@@ -1,0 +1,43 @@
+services:
+  auth:
+    build:
+      context: ./auth
+    env_file:
+      - ./auth/.env
+    volumes:
+      - ./auth/auth.py:/auth/auth.py
+    networks:
+      - traefik-network
+
+  app:
+    build:
+      context: ./app
+    env_file:
+      - ./app/.env
+    volumes:
+      - ./app/app.py:/app/app.py
+      - ./app/requirements.txt:/app/requirements.txt
+    depends_on:
+      - auth
+    networks:
+      - traefik-network
+
+  traefik:
+    image: traefik:v3.1.2
+    ports:
+      - "80:80"
+      - "8081:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.yaml:/etc/traefik/traefik.yaml
+      - ./traefik/dynamic.yaml:/etc/traefik/dynamic.yaml
+    depends_on:
+      - auth
+      - app
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    driver: bridge
