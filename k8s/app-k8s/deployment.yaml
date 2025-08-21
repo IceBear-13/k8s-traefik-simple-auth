@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: app
-          image: your-app-image
+          image: app
+          imagePullPolicy: Never
           ports:
             - containerPort: 5001
           env:
